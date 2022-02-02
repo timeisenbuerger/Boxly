@@ -152,3 +152,15 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/kotlin,intellij,gradle
 build
 gpm.json
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/modules/compose-desktop-template.test.iml
+.idea/modules/data/compose-desktop-template.data.test.iml
+.idea/runConfigurations.xml
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/runConfigurations.xml
+.idea/runConfigurations.xml
+*.xml

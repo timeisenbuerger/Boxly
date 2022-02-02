@@ -3,13 +3,13 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.5.31"
+    val kotlinVersion = "1.6.10"
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    id("org.jetbrains.compose") version "1.0.0-beta1"
+    id("org.jetbrains.compose") version "1.0.1"
 }
 
-group = "com.myapp"
+group = "de.tei.boxly"
 version = "1.0.0"
 
 repositories {
@@ -20,7 +20,7 @@ repositories {
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
 }
 
-val daggerVersion by extra("2.39.1")
+val daggerVersion by extra("2.40.5")
 
 dependencies {
     implementation(compose.desktop.currentOs)
@@ -36,15 +36,23 @@ dependencies {
     implementation("com.theapache64:cyclone:1.0.0-alpha01")
 
     // Decompose : Decompose
-    val decomposeVersion = "0.2.5"
+    val decomposeVersion = "0.5.0"
     implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
+    // Webcam dependencies
+    implementation("com.github.sarxos:webcam-capture:0.3.12")
+
+// Kotlin coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+
+// Extended material icons
+    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.0.1")
 
     /**
      * Testing Dependencies
      */
-    testImplementation("org.mockito:mockito-inline:3.7.7")
+    testImplementation("org.mockito:mockito-inline:4.2.0")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 
     // DaggerMock
@@ -52,7 +60,7 @@ dependencies {
     testImplementation("com.github.fabioCollini.daggermock:daggermock-kotlin:0.8.5")
 
     // Mockito Core : Mockito mock objects library core API and implementation
-    testImplementation("org.mockito:mockito-core:3.7.7")
+    testImplementation("org.mockito:mockito-core:4.2.0")
 
     // Expekt : An assertion library for Kotlin
     testImplementation("com.github.theapache64:expekt:1.0.0")
@@ -60,7 +68,7 @@ dependencies {
     // JUnit
 
     // Kotlinx Coroutines Test : Coroutines support libraries for Kotlin
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
     testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
 
     // JUnit : JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.
@@ -73,7 +81,7 @@ tasks.withType<KotlinCompile>() {
 
 compose.desktop {
     application {
-        mainClass = "com.myapp.AppKt"
+        mainClass = "de.tei.boxly.AppKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "myapp"

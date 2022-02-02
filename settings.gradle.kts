@@ -5,5 +5,5 @@ pluginManagement {
     }
 
 }
-rootProject.name = "compose-desktop-template"
+rootProject.name = "Boxly"
 include("data")
