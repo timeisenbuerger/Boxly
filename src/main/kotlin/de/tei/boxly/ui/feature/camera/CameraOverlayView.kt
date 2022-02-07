@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +29,6 @@ private fun rememberCameraScreenState(uiState: CameraScreenState) {
 fun CameraOverlay(viewModel: CameraViewModel) {
     val uiState = viewModel.uiState
     rememberCameraScreenState(uiState)
-    val coroutineScope = rememberCoroutineScope()
 
     Box {
         Surface(color = Color.Transparent.copy(alpha = 0f)) {
@@ -97,7 +95,7 @@ fun CameraOverlay(viewModel: CameraViewModel) {
 
                 Column {
                     IconButton(onClick = {
-                        initRecord(uiState, viewModel, coroutineScope)
+                        initRecord(uiState, viewModel)
                     }) {
                         Icon(
                             Icons.Filled.RadioButtonChecked,
@@ -125,7 +123,7 @@ fun CameraOverlay(viewModel: CameraViewModel) {
         }
     }
 
-    LastCapturedImageView(uiState)
+    LastCapturedImageView(viewModel)
     ScreenTimerView(uiState)
 }
 
@@ -212,14 +210,14 @@ fun ScreenTimerView(uiState: CameraScreenState) {
 }
 
 @Composable
-fun LastCapturedImageView(uiState: CameraScreenState) {
-    uiState.lastCapturedPhoto.value?.let { image ->
+fun LastCapturedImageView(viewModel: CameraViewModel) {
+    viewModel.uiState.lastCapturedPhotoAsBitmap.value?.let { image ->
         Column(
             modifier = Modifier.fillMaxSize().padding(bottom = 30.dp, end = 50.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         ) {
-            Button(onClick = {}, contentPadding = PaddingValues(0.dp), modifier = Modifier.width(300.dp).height(225.dp)) {
+            Button(onClick = {viewModel.onImageClicked()}, contentPadding = PaddingValues(0.dp), modifier = Modifier.width(300.dp).height(225.dp)) {
                 Image(
                     bitmap = image,
                     "",
@@ -238,9 +236,9 @@ private fun calculateTimerDelay(uiState: CameraScreenState): Int {
     }
 }
 
-private fun initRecord(uiState: CameraScreenState, viewModel: CameraViewModel, coroutineScope: CoroutineScope) {
+private fun initRecord(uiState: CameraScreenState, viewModel: CameraViewModel) {
     uiState.countDown.value = calculateTimerDelay(uiState)
-    coroutineScope.launch {
+    viewModel.viewModelScope.launch {
         withContext(Dispatchers.IO) {
             delay(1000)
             while (uiState.countDown.value > 0) {

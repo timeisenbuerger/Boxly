@@ -102,7 +102,7 @@ fun MainScreen(
             OutlinedButton(
                 modifier = buttonModifier,
                 shape = CutCornerShape(10.dp),
-                onClick = { },
+                onClick = { viewModel.onGalleryClicked() },
                 colors = ButtonDefaults.textButtonColors(
                     backgroundColor = R.color.SecondaryDarkColor,
                     contentColor = R.color.SecondaryLightColor
@@ -127,15 +127,5 @@ fun MainScreen(
                 }
             )
         }
-
-//        Column(
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier.fillMaxSize().padding(top = 500.dp)
-//        ) {
-//            Button(onClick = {}, modifier = buttonModifier) {
-//                Text("QR-Code")
-//            }
-//        }
     }
 }

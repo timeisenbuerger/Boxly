@@ -9,17 +9,28 @@ import javax.inject.Inject
 import kotlin.system.exitProcess
 
 class MainViewModel @Inject constructor(
-    private val fileRepository: FileRepository,
-    // Inject your repos here...
 ) : ViewModel() {
-    companion object {
-    }
 
     private val _isCameraClicked = MutableStateFlow(false)
     val isCameraClicked: StateFlow<Boolean> = _isCameraClicked
 
+    private val _isGalleryClicked = MutableStateFlow(false)
+    val isGalleryClicked: StateFlow<Boolean> = _isGalleryClicked
+
     fun onCameraClicked() {
-        _isCameraClicked.value = !_isCameraClicked.value
+        _isCameraClicked.value = true
+    }
+
+    fun onCameraClickedFinished() {
+        _isCameraClicked.value = false
+    }
+
+    fun onGalleryClicked() {
+        _isGalleryClicked.value = true
+    }
+
+    fun onGalleryClickedFinished() {
+        _isGalleryClicked.value = false
     }
 
     fun closeWindow() {

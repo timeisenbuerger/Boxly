@@ -6,7 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -14,11 +15,6 @@ import de.tei.boxly.ui.feature.camera.CameraViewModel.Companion.webcam
 import de.tei.boxly.util.convertToBitmap
 import kotlinx.coroutines.*
 import java.awt.Dimension
-
-@Composable
-private fun rememberCameraImage(uiState: CameraScreenState) {
-    remember { uiState }
-}
 
 @Preview
 @Composable
@@ -30,19 +26,8 @@ fun ComposeWebcamView(
     imageWidth: Int = viewWidth,
     imageHeight: Int = viewHeight
 ) {
-//    val uiState = viewModel.uiState
-//    rememberCameraImage(uiState)
-
-//    val image: MutableState<ImageBitmap> = remember { mutableStateOf(ImageBitmap(0, 0, ImageBitmapConfig.Argb8888)) }
     val coroutineScope = rememberCoroutineScope()
-
-    if (!webcam.isOpen) {
-        webcam.viewSizes
-        webcam.viewSize = Dimension(viewWidth, viewHeight)
-    }
-    webcam.open()
-
-    generateFrame(viewModel, coroutineScope, fps, imageWidth, imageHeight)
+    generateFrame(viewModel, coroutineScope, fps, imageWidth, imageHeight, viewWidth, viewHeight)
 
     Box {
         Column(
@@ -61,20 +46,42 @@ fun generateFrame(
     coroutineScope: CoroutineScope,
     fps: Int,
     imageWidth: Int,
-    imageHeight: Int
+    imageHeight: Int,
+    viewWidth: Int,
+    viewHeight: Int
 ): Job {
     return coroutineScope.launch(Dispatchers.IO) {
         withContext(Dispatchers.IO) {
             try {
-                val bufferedImage = webcam.image
-                if (viewModel.isCapturePhotoClicked.value) {
-                    viewModel.capturePhoto(bufferedImage)
+                if (viewModel.isScreenActive.value) {
+                    handleImageCapturing(viewModel, imageWidth, imageHeight, viewWidth, viewHeight)
                 }
-                viewModel.uiState.webcamViewImage.value = convertToBitmap(bufferedImage, imageWidth, imageHeight)
             } catch (e: Exception) {
-                webcam.close()
+                println(e)
             }
         }
         delay((1000 / fps).toLong())
+    }
+}
+
+private fun handleImageCapturing(
+    viewModel: CameraViewModel,
+    imageWidth: Int,
+    imageHeight: Int,
+    viewWidth: Int,
+    viewHeight: Int
+) {
+    if (!webcam.isOpen) {
+        webcam.viewSizes
+        webcam.viewSize = Dimension(viewWidth, viewHeight)
+        webcam.open()
+    }
+
+    val bufferedImage = webcam.image
+    bufferedImage?.let {
+        if (viewModel.isCapturePhotoClicked.value) {
+            viewModel.capturePhoto(bufferedImage)
+        }
+        viewModel.uiState.webcamViewImage.value = convertToBitmap(bufferedImage, imageWidth, imageHeight)
     }
 }

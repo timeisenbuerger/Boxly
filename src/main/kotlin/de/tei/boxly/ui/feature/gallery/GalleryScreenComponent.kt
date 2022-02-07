@@ -1,20 +1,19 @@
-package de.tei.boxly.ui.feature.main
+package de.tei.boxly.ui.feature.gallery
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.ComponentContext
 import de.tei.boxly.di.AppComponent
 import de.tei.boxly.ui.navigation.Component
 import javax.inject.Inject
 
-class MainScreenComponent(
+class GalleryScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onCameraClicked: () -> Unit,
-    private val onGalleryClicked: () -> Unit
+    private val onBackClicked: () -> Unit,
+    private val onItemClicked: () -> Unit
 ) : Component, ComponentContext by componentContext {
     @Inject
-    lateinit var viewModel: MainViewModel
+    lateinit var viewModel: GalleryViewModel
 
     init {
         appComponent.inject(this)
@@ -27,16 +26,16 @@ class MainScreenComponent(
             viewModel.init(scope)
         }
 
-        val isCameraClicked by viewModel.isCameraClicked.collectAsState()
-        if (isCameraClicked) {
-            onCameraClicked()
+        val isBackClicked = viewModel.isBackClicked.collectAsState()
+        if (isBackClicked.value) {
+            onBackClicked()
         }
 
-        val isGalleryClicked by viewModel.isGalleryClicked.collectAsState()
-        if (isGalleryClicked) {
-            onGalleryClicked()
+        val isItemClicked = viewModel.isItemClicked.collectAsState()
+        if (isItemClicked.value) {
+            onItemClicked()
         }
 
-        MainScreen(viewModel)
+        GalleryScreen(viewModel)
     }
 }

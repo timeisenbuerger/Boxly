@@ -1,20 +1,24 @@
-package de.tei.boxly.ui.feature.camera
+package de.tei.boxly.ui.feature.editor
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.ImageBitmap
 import com.arkivanov.decompose.ComponentContext
 import de.tei.boxly.di.AppComponent
-import de.tei.boxly.ui.feature.MainActivity
 import de.tei.boxly.ui.navigation.Component
+import java.awt.image.BufferedImage
 import javax.inject.Inject
 
-class CameraScreenComponent(
+class EditorScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onBackClicked: () -> Unit,
-    private val onImageClicked: () -> Unit
+    private val onBackClicked: (toCameraScreen: Boolean) -> Unit,
+    private val imageBitmap: ImageBitmap?,
+    private val imageBuffered: BufferedImage?,
+    private val sourceScreen: String
 ) : Component, ComponentContext by componentContext {
+
     @Inject
-    lateinit var viewModel: CameraViewModel
+    lateinit var viewModel: EditorViewModel
 
     init {
         appComponent.inject(this)
@@ -22,6 +26,7 @@ class CameraScreenComponent(
 
     @Composable
     override fun render() {
+
         val scope = rememberCoroutineScope()
         LaunchedEffect(viewModel) {
             viewModel.init(scope)
@@ -29,14 +34,12 @@ class CameraScreenComponent(
 
         val isBackClicked by viewModel.isBackClicked.collectAsState()
         if (isBackClicked) {
-            onBackClicked()
+            onBackClicked(sourceScreen == "CameraScreen")
         }
 
-        val isImageClicked by viewModel.isImageClicked.collectAsState()
-        if (isImageClicked) {
-            onImageClicked()
-        }
-
-        CameraScreen(viewModel, MainActivity.getWindowScope())
+        viewModel.setOriginalImage(imageBitmap, imageBuffered)
+        EditorScreen(
+            viewModel = viewModel
+        )
     }
 }

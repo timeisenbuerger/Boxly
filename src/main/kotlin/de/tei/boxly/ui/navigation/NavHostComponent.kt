@@ -1,15 +1,17 @@
 package de.tei.boxly.ui.navigation
 
 import androidx.compose.runtime.Composable
-import com.arkivanov.decompose.*
+import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.crossfadeScale
 import com.arkivanov.decompose.router.replaceCurrent
 import com.arkivanov.decompose.router.router
 import com.arkivanov.essenty.parcelable.Parcelable
-import de.tei.boxly.di.DaggerAppComponent
 import de.tei.boxly.di.AppComponent
+import de.tei.boxly.di.DaggerAppComponent
 import de.tei.boxly.ui.feature.camera.CameraScreenComponent
+import de.tei.boxly.ui.feature.editor.EditorScreenComponent
+import de.tei.boxly.ui.feature.gallery.GalleryScreenComponent
 import de.tei.boxly.ui.feature.main.MainScreenComponent
 import de.tei.boxly.ui.feature.splash.SplashScreenComponent
 
@@ -20,6 +22,12 @@ class NavHostComponent(
     private val componentContext: ComponentContext,
 ) : Component, ComponentContext by componentContext {
 
+    private lateinit var splashScreenComponent: SplashScreenComponent
+    private lateinit var mainScreenComponent: MainScreenComponent
+    private lateinit var cameraScreenComponent: CameraScreenComponent
+    private lateinit var editorScreenComponent: EditorScreenComponent
+    private lateinit var galleryScreenComponent: GalleryScreenComponent
+
     /**
      * Available screensSelectApp
      */
@@ -27,10 +35,11 @@ class NavHostComponent(
         object Splash : Config()
         object Main : Config()
         object Camera : Config()
+        object Editor : Config()
+        object Gallery : Config()
     }
 
-    private val appComponent: AppComponent = DaggerAppComponent
-        .create()
+    private val appComponent: AppComponent = DaggerAppComponent.create()
 
     /**
      * Router configuration
@@ -45,21 +54,81 @@ class NavHostComponent(
      * When a new navigation request made, the screen will be created by this method.
      */
     private fun createScreenComponent(config: Config, componentContext: ComponentContext): Component {
+        initComponents()
+
         return when (config) {
-            is Config.Splash -> SplashScreenComponent(
+            is Config.Splash -> splashScreenComponent
+            is Config.Main -> mainScreenComponent
+            is Config.Camera -> cameraScreenComponent
+            is Config.Editor -> {
+
+                val sourceScreen =
+                    if (galleryScreenComponent.viewModel.selectedImage.value != null) {
+                        "GalleryScreen"
+                    } else {
+                        "CameraScreen"
+                    }
+
+                val imageBitmap =
+                    if (galleryScreenComponent.viewModel.selectedImage.value != null) {
+                        galleryScreenComponent.viewModel.selectedImage.value!!.imageBitmap
+                    } else {
+                        cameraScreenComponent.viewModel.uiState.lastCapturedPhotoAsBitmap.value
+                    }
+
+                val imageBuffered =
+                    if (galleryScreenComponent.viewModel.selectedImage.value != null) {
+                        galleryScreenComponent.viewModel.selectedImage.value!!.imageBuffered
+                    } else {
+                        cameraScreenComponent.viewModel.uiState.lastCapturedPhotoAsBufferedImage.value
+                    }
+
+                editorScreenComponent = EditorScreenComponent(
+                    appComponent = appComponent,
+                    componentContext = componentContext,
+                    onBackClicked = ::onBackFromEditorScreenClicked,
+                    imageBitmap = imageBitmap,
+                    imageBuffered = imageBuffered,
+                    sourceScreen = sourceScreen
+                    )
+                return editorScreenComponent
+            }
+            is Config.Gallery -> {
+                galleryScreenComponent = GalleryScreenComponent(
+                    appComponent = appComponent,
+                    componentContext = componentContext,
+                    onBackClicked = ::onBackToMainScreenFromGalleryClicked,
+                    onItemClicked = ::onImageClickedFromGallery
+                )
+                return galleryScreenComponent
+            }
+        }
+    }
+
+    private fun initComponents() {
+        if (!::splashScreenComponent.isInitialized) {
+            splashScreenComponent = SplashScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
                 onSplashFinished = ::onSplashFinished,
             )
-            is Config.Main -> MainScreenComponent(
+        }
+
+        if (!::mainScreenComponent.isInitialized) {
+            mainScreenComponent = MainScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
-                onCameraClicked = ::onCameraClicked
+                onCameraClicked = ::onCameraClicked,
+                onGalleryClicked = ::onGalleryClicked
             )
-            is Config.Camera -> CameraScreenComponent(
+        }
+
+        if (!::cameraScreenComponent.isInitialized) {
+            cameraScreenComponent = CameraScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
-                onBackClicked = ::onBackToMainScreenClicked
+                onBackClicked = ::onBackToMainScreenClicked,
+                onImageClicked = ::onImageClicked
             )
         }
     }
@@ -83,9 +152,51 @@ class NavHostComponent(
 
     private fun onCameraClicked() {
         router.replaceCurrent(Config.Camera)
+        mainScreenComponent.viewModel.onCameraClickedFinished()
+        cameraScreenComponent.viewModel.enableScreen(true)
+    }
+
+    private fun onGalleryClicked() {
+        router.replaceCurrent(Config.Gallery)
+        mainScreenComponent.viewModel.onGalleryClickedFinished()
     }
 
     private fun onBackToMainScreenClicked() {
         router.replaceCurrent(Config.Main)
+        cameraScreenComponent.viewModel.onBackClickFinished()
+    }
+
+    private fun onBackToMainScreenFromGalleryClicked() {
+        router.replaceCurrent(Config.Main)
+        galleryScreenComponent.viewModel.onBackClickFinished()
+    }
+
+    private fun onImageClicked() {
+        router.replaceCurrent(Config.Editor)
+        cameraScreenComponent.viewModel.onImageClickedFinished()
+    }
+
+    private fun onImageClickedFromGallery() {
+        router.replaceCurrent(Config.Editor)
+        galleryScreenComponent.viewModel.onItemClickedFinished()
+    }
+
+    private fun onBackFromEditorScreenClicked(toCameraScreen: Boolean) {
+        if (toCameraScreen) {
+            onBackToCameraScreenClicked()
+        } else {
+            onBackToGalleryScreenClicked()
+        }
+    }
+
+    private fun onBackToCameraScreenClicked() {
+        router.replaceCurrent(Config.Camera)
+        editorScreenComponent.viewModel.onBackClickFinished()
+        cameraScreenComponent.viewModel.enableScreen(true)
+    }
+
+    private fun onBackToGalleryScreenClicked() {
+        router.replaceCurrent(Config.Gallery)
+        editorScreenComponent.viewModel.onBackClickFinished()
     }
 }

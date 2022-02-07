@@ -25,6 +25,8 @@ val daggerVersion by extra("2.40.5")
 dependencies {
     implementation(compose.desktop.currentOs)
 
+    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
+
     // Module dependencies
     implementation(project(":data"))
 
