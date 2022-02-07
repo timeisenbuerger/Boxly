@@ -1,6 +1,7 @@
 package de.tei.boxly.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.ImageBitmap
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.crossfadeScale
@@ -14,6 +15,7 @@ import de.tei.boxly.ui.feature.editor.EditorScreenComponent
 import de.tei.boxly.ui.feature.gallery.GalleryScreenComponent
 import de.tei.boxly.ui.feature.main.MainScreenComponent
 import de.tei.boxly.ui.feature.splash.SplashScreenComponent
+import java.awt.image.BufferedImage
 
 /**
  * All navigation decisions are made from here
@@ -27,6 +29,7 @@ class NavHostComponent(
     private lateinit var cameraScreenComponent: CameraScreenComponent
     private lateinit var editorScreenComponent: EditorScreenComponent
     private lateinit var galleryScreenComponent: GalleryScreenComponent
+    private var comingFromCameraScreen = true
 
     /**
      * Available screensSelectApp
@@ -62,26 +65,18 @@ class NavHostComponent(
             is Config.Camera -> cameraScreenComponent
             is Config.Editor -> {
 
-                val sourceScreen =
-                    if (galleryScreenComponent.viewModel.selectedImage.value != null) {
-                        "GalleryScreen"
-                    } else {
-                        "CameraScreen"
-                    }
-
-                val imageBitmap =
-                    if (galleryScreenComponent.viewModel.selectedImage.value != null) {
-                        galleryScreenComponent.viewModel.selectedImage.value!!.imageBitmap
-                    } else {
-                        cameraScreenComponent.viewModel.uiState.lastCapturedPhotoAsBitmap.value
-                    }
-
-                val imageBuffered =
-                    if (galleryScreenComponent.viewModel.selectedImage.value != null) {
-                        galleryScreenComponent.viewModel.selectedImage.value!!.imageBuffered
-                    } else {
-                        cameraScreenComponent.viewModel.uiState.lastCapturedPhotoAsBufferedImage.value
-                    }
+                val imageBitmap: ImageBitmap
+                val imageBuffered: BufferedImage
+                val sourceScreen: String
+                if (comingFromCameraScreen) {
+                    sourceScreen = "CameraScreen"
+                    imageBitmap = cameraScreenComponent.viewModel.uiState.lastCapturedPhotoAsBitmap.value!!
+                    imageBuffered = cameraScreenComponent.viewModel.uiState.lastCapturedPhotoAsBufferedImage.value!!
+                } else {
+                    sourceScreen = "GalleryScreen"
+                    imageBitmap = galleryScreenComponent.viewModel.selectedImage.value!!.imageBitmap
+                    imageBuffered = galleryScreenComponent.viewModel.selectedImage.value!!.imageBuffered
+                }
 
                 editorScreenComponent = EditorScreenComponent(
                     appComponent = appComponent,
@@ -90,7 +85,7 @@ class NavHostComponent(
                     imageBitmap = imageBitmap,
                     imageBuffered = imageBuffered,
                     sourceScreen = sourceScreen
-                    )
+                )
                 return editorScreenComponent
             }
             is Config.Gallery -> {
@@ -172,11 +167,13 @@ class NavHostComponent(
     }
 
     private fun onImageClicked() {
+        comingFromCameraScreen = true
         router.replaceCurrent(Config.Editor)
         cameraScreenComponent.viewModel.onImageClickedFinished()
     }
 
     private fun onImageClickedFromGallery() {
+        comingFromCameraScreen = false
         router.replaceCurrent(Config.Editor)
         galleryScreenComponent.viewModel.onItemClickedFinished()
     }
