@@ -1,7 +1,7 @@
 package de.tei.boxly.ui.feature
 
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.rememberWindowState
@@ -12,6 +12,7 @@ import com.theapache64.cyclone.core.Intent
 import de.tei.boxly.App
 import de.tei.boxly.ui.navigation.NavHostComponent
 import de.tei.boxly.ui.value.BoxlyAppTheme
+import de.tei.boxly.util.WebcamHandler
 import androidx.compose.ui.window.application as setContent
 
 /**
@@ -25,10 +26,8 @@ class MainActivity : Activity() {
             }
         }
 
-        private lateinit var windowScope: FrameWindowScope
-        fun getWindowScope(): FrameWindowScope {
-            return windowScope
-        }
+        lateinit var windowInstance: ComposeWindow
+        val webcamHandler = WebcamHandler()
     }
 
     override fun onCreate() {
@@ -45,7 +44,7 @@ class MainActivity : Activity() {
                 icon = painterResource("drawables/launcher_icons/system.png"),
                 state = rememberWindowState(placement = WindowPlacement.Maximized),
             ) {
-                windowScope = this
+                windowInstance = this.window
 
                 BoxlyAppTheme {
                     // render root component

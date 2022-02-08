@@ -1,13 +1,13 @@
 package de.tei.boxly.ui.feature.gallery
 
 import de.tei.boxly.di.local.FileRepository
+import de.tei.boxly.model.ImageData
 import de.tei.boxly.util.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.awt.image.BufferedImage
 import javax.inject.Inject
 
 class GalleryViewModel @Inject constructor(
@@ -42,7 +42,7 @@ class GalleryViewModel @Inject constructor(
     }
 
     private fun loadImages() {
-        _uiState.images.value = fileRepository.loadImages()
+        _uiState.imageDataList.value = fileRepository.loadImages()
     }
 
     fun onItemClicked(item: ImageData) {

@@ -6,15 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import de.tei.boxly.ui.base.BackButton
 import de.tei.boxly.ui.value.R
 
 @Composable
@@ -30,23 +29,9 @@ fun GalleryScreen(viewModel: GalleryViewModel) {
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier.padding(15.dp)
-        ) {
-            IconButton(onClick = { viewModel.onBackClicked() }) {
-                Icon(
-                    Icons.Filled.ArrowBack,
-                    contentDescription = "Zurück",
-                    tint = R.color.SecondaryColor,
-                    modifier = Modifier.size(50.dp)
-                )
-            }
-        }
+        BackButton { viewModel.onBackClicked() }
 
-        val list = uiState.images.value
-
+        val list = uiState.imageDataList.value
         LazyVerticalGrid(
             cells = GridCells.Adaptive(300.dp),
 
@@ -57,7 +42,7 @@ fun GalleryScreen(viewModel: GalleryViewModel) {
                 end = 12.dp,
                 bottom = 16.dp
             ),
-            modifier = Modifier.padding(top = 50.dp),
+            modifier = Modifier.padding(top = 65.dp),
             content = {
                 items(list.size) { index ->
                     val item = list[index]
@@ -66,14 +51,18 @@ fun GalleryScreen(viewModel: GalleryViewModel) {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Button(
-                            onClick = {viewModel.onItemClicked(item)},
+                            onClick = { viewModel.onItemClicked(item) },
                             contentPadding = PaddingValues(0.dp),
+                            colors = ButtonDefaults.textButtonColors(
+                                backgroundColor = Color.Black,
+                            ),
                             modifier = Modifier.width(290.dp).height(225.dp).padding(10.dp),
                         ) {
                             Image(
                                 bitmap = item.imageBitmap,
                                 "",
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
                             )
                         }
                     }

@@ -1,8 +1,8 @@
 package de.tei.boxly.ui.feature.editor
 
-import androidx.compose.ui.graphics.ImageBitmap
 import de.tei.boxly.di.local.FileRepository
 import de.tei.boxly.model.SampleFilterData
+import de.tei.boxly.model.ImageData
 import de.tei.boxly.util.FilterImpl
 import de.tei.boxly.util.ViewModel
 import de.tei.boxly.util.convertToBitmap
@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.awt.image.BufferedImage
 import javax.inject.Inject
 
 class EditorViewModel @Inject constructor(
@@ -34,10 +33,10 @@ class EditorViewModel @Inject constructor(
     private val _isBackClicked = MutableStateFlow(false)
     val isBackClicked: StateFlow<Boolean> = _isBackClicked
 
-    fun setOriginalImage(image: ImageBitmap?, imageBuffered: BufferedImage?) {
-        uiState.originalImage.value = image
+    fun setOriginalImage(imageData: ImageData) {
+        uiState.originalImage.value = imageData.resizedImageBitmap
         uiState.editedImage.value = uiState.originalImage.value
-        imageBuffered?.let { uiState.originalBufferedImage.value = resize(it, it.width, it.height) }
+        imageData.imageBuffered.let { uiState.originalBufferedImage.value = resize(it, it.width, it.height) }
     }
 
     fun onBackClicked() {

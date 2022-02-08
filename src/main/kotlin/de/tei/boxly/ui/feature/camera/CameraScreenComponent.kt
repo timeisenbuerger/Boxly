@@ -1,6 +1,10 @@
 package de.tei.boxly.ui.feature.camera
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Surface
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.arkivanov.decompose.ComponentContext
 import de.tei.boxly.di.AppComponent
 import de.tei.boxly.ui.feature.MainActivity
@@ -37,6 +41,11 @@ class CameraScreenComponent(
             onImageClicked()
         }
 
-        CameraScreen(viewModel, MainActivity.getWindowScope())
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color.Black
+        ) {
+            CameraScreen(viewModel)
+        }
     }
 }

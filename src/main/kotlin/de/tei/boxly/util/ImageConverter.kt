@@ -29,14 +29,9 @@ fun convertToBufferedImage(image: File): BufferedImage {
     return ImageIO.read(image)
 }
 
-fun convertToBitmap(image: BufferedImage): ImageBitmap {
-    return convertToBitmap(image = image, imageWidth = image.width, imageHeight = image.height)
-}
-
-fun convertToBitmap(image: BufferedImage, imageWidth: Int, imageHeight: Int): ImageBitmap {
+fun resizeAndConvertToBitmap(image: BufferedImage, width: Int, height: Int): ImageBitmap {
     val stream = ByteArrayOutputStream()
-    val resizedImage =
-        if (image.width == imageWidth && image.height == imageHeight) image else resize(image, imageWidth, imageHeight)
+    val resizedImage = resize(image, width, height)
     ImageIO.write(resizedImage, "bmp", stream)
     stream.flush()
     val bytes = stream.toByteArray()
@@ -45,9 +40,19 @@ fun convertToBitmap(image: BufferedImage, imageWidth: Int, imageHeight: Int): Im
         .toComposeImageBitmap()
 }
 
-fun resize(img: BufferedImage, newW: Int, newH: Int): BufferedImage {
-    val tmp: Image = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH)
-    val dimg = BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB)
+fun convertToBitmap(image: BufferedImage): ImageBitmap {
+    val stream = ByteArrayOutputStream()
+    ImageIO.write(image, "bmp", stream)
+    stream.flush()
+    val bytes = stream.toByteArray()
+    stream.close()
+    return org.jetbrains.skia.Image.makeFromEncoded(bytes)
+        .toComposeImageBitmap()
+}
+
+fun resize(img: BufferedImage, newWidth: Int, newHeight: Int): BufferedImage {
+    val tmp: Image = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH)
+    val dimg = BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB)
     val g2d = dimg.createGraphics()
     g2d.drawImage(tmp, 0, 0, null)
     g2d.dispose()

@@ -1,11 +1,8 @@
 package de.tei.boxly.di.local
 
-import androidx.compose.ui.graphics.ImageBitmap
-import de.tei.boxly.ui.feature.gallery.ImageData
-import de.tei.boxly.util.OS
-import de.tei.boxly.util.convertToBitmap
-import de.tei.boxly.util.convertToBufferedImage
-import de.tei.boxly.util.getOS
+import de.tei.boxly.ui.feature.MainActivity.Companion.windowInstance
+import de.tei.boxly.model.ImageData
+import de.tei.boxly.util.*
 import java.awt.image.BufferedImage
 import java.io.File
 import java.time.LocalDateTime
@@ -28,7 +25,8 @@ class FileRepository @Inject constructor() {
         if (directory.exists()) {
             val files = directory.listFiles()
             files?.forEach {
-                images.add(ImageData(convertToBitmap(it), convertToBufferedImage(it)))
+                val bufferedImage = convertToBufferedImage(it)
+                images.add(ImageData(convertToBitmap(it), resizeAndConvertToBitmap(bufferedImage, windowInstance.width, windowInstance.height), bufferedImage))
             }
         }
         return images

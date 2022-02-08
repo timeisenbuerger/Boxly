@@ -25,8 +25,6 @@ val daggerVersion by extra("2.40.5")
 dependencies {
     implementation(compose.desktop.currentOs)
 
-    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
-
     // Module dependencies
     implementation(project(":data"))
 
@@ -45,11 +43,11 @@ dependencies {
     // Webcam dependencies
     implementation("com.github.sarxos:webcam-capture:0.3.12")
 
-// Kotlin coroutines
+    // Kotlin coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
 
-// Extended material icons
-    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.0.1")
+    // Extended material icons
+    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.2.0-alpha01-dev602")
 
     /**
      * Testing Dependencies

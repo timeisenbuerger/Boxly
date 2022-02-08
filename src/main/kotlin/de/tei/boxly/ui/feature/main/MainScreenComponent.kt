@@ -1,7 +1,6 @@
 package de.tei.boxly.ui.feature.main
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.ComponentContext
 import de.tei.boxly.di.AppComponent
 import de.tei.boxly.ui.navigation.Component
@@ -13,6 +12,7 @@ class MainScreenComponent(
     private val onCameraClicked: () -> Unit,
     private val onGalleryClicked: () -> Unit
 ) : Component, ComponentContext by componentContext {
+
     @Inject
     lateinit var viewModel: MainViewModel
 

@@ -1,194 +1,174 @@
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.tei.boxly.ui.base.BackButton
 import de.tei.boxly.ui.feature.camera.CameraScreenState
 import de.tei.boxly.ui.feature.camera.CameraViewModel
+import de.tei.boxly.ui.feature.camera.QualityChoiceBox
+import de.tei.boxly.ui.feature.camera.TimerChoiceBox
 import de.tei.boxly.ui.value.R
-import kotlinx.coroutines.*
-
-@Composable
-private fun rememberCameraScreenState(uiState: CameraScreenState) {
-    remember { uiState }
-}
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Preview
 @Composable
 fun CameraOverlay(viewModel: CameraViewModel) {
     val uiState = viewModel.uiState
-    rememberCameraScreenState(uiState)
 
-    Box {
-        Surface(color = Color.Transparent.copy(alpha = 0f)) {
-            Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier.padding(15.dp)
-            ) {
-                IconButton(onClick = { viewModel.onBackClicked() }) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        BackButton(
+            onBackClicked = { viewModel.onBackClicked() }
+        )
+
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier.fillMaxSize()
+                .padding(15.dp)
+        ) {
+            if (uiState.isTimerChoiceVisible.value) {
+                TimerChoiceBox(viewModel)
+            } else if (uiState.isQualityChoiceVisible.value) {
+                QualityChoiceBox(viewModel)
+            } else {
+                Button(
+                    onClick = { viewModel.onTimerChoiceClicked() },
+                    shape = CircleShape,
+                    colors = ButtonDefaults.textButtonColors(
+                        backgroundColor = R.color.SecondaryColor,
+                        contentColor = R.color.PrimaryColor
+                    ),
+                    border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+                ) {
                     Icon(
-                        Icons.Filled.ArrowBack,
-                        contentDescription = "Zurück",
-                        tint = R.color.SecondaryColor,
-                        modifier = Modifier.size(50.dp)
+                        imageVector = Icons.Default.AccessTime,
+                        contentDescription = "Verzögerung",
+                        modifier = Modifier.size(50.dp),
                     )
-                }
-            }
-
-            Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.End,
-                modifier = Modifier.fillMaxSize()
-                    .padding(15.dp)
-            ) {
-
-                if (uiState.isTimerChoiceVisible.value) {
-                    TimerChoiceBox(uiState)
-                } else {
-                    IconButton(onClick = { uiState.isTimerChoiceVisible.value = !uiState.isTimerChoiceVisible.value }) {
-                        Icon(
-                            Icons.Default.AccessTime,
-                            contentDescription = "Verzögerung",
-                            tint = R.color.SecondaryColor,
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
                     Text(text = "${calculateTimerDelay(uiState)} Sek.")
+                }
+
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                Button(
+                    onClick = { viewModel.onQualityChoiceClicked() },
+                    shape = CircleShape,
+                    colors = ButtonDefaults.textButtonColors(
+                        backgroundColor = R.color.SecondaryColor,
+                        contentColor = R.color.PrimaryColor
+                    ),
+                    border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.HighQuality,
+                        contentDescription = "Qualität",
+                        modifier = Modifier.size(50.dp),
+                    )
+                    val quality = if (uiState.selectedQuality.value == 0) "Full HD" else "4K UHD"
+                    Text(text = quality)
                 }
             }
         }
     }
 
-    Box {
+    Box(
+        modifier = Modifier.fillMaxSize().padding(15.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
         Column(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-                .padding(15.dp)
+            modifier = Modifier.padding(end = 110.dp, bottom = 100.dp)
         ) {
-            Row {
-                Column(modifier = Modifier.padding(top = 25.dp, end = 10.dp)) {
-                    IconToggleButton(
-                        checked = !uiState.isPhotoActive.value,
-                        onCheckedChange = { uiState.isPhotoActive.value = !it }) {
-                        val tint by animateColorAsState(if (!uiState.isPhotoActive.value) R.color.SecondaryColor else R.color.PrimaryColor)
-                        Icon(
-                            Icons.Filled.Videocam,
-                            contentDescription = "Video",
-                            tint = tint,
-                            modifier = Modifier.size(55.dp)
-                        )
-                    }
-                }
+            val videoIcon = if (!uiState.isPhotoActive.value) Icons.Filled.Videocam else Icons.Filled.VideocamOff
+            val iconTint by animateColorAsState(if (!uiState.isPhotoActive.value) R.color.PrimaryColor else Color.Gray)
+            val buttonBackground by animateColorAsState(
+                if (!uiState.isPhotoActive.value) R.color.SecondaryColor else Color.Black.copy(
+                    alpha = 0.6f
+                )
+            )
+            Button(
+                onClick = { viewModel.onActivateVideoClicked() },
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = buttonBackground
+                ),
+                border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+            ) {
+                Icon(
+                    imageVector = videoIcon,
+                    contentDescription = "Video",
+                    modifier = Modifier.size(30.dp),
+                    tint = iconTint
+                )
+                Text(text = "Video")
+            }
+        }
 
-                Column {
-                    IconButton(onClick = {
-                        initRecord(uiState, viewModel)
-                    }) {
-                        Icon(
-                            Icons.Filled.RadioButtonChecked,
-                            contentDescription = "Start",
-                            tint = R.color.SecondaryColor,
-                            modifier = Modifier.size(100.dp)
-                        )
-                    }
-                }
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            IconButton(onClick = {
+                initRecord(viewModel)
+            }) {
+                Icon(
+                    Icons.Filled.RadioButtonChecked,
+                    contentDescription = "Start",
+                    tint = R.color.SecondaryColor,
+                    modifier = Modifier.size(100.dp)
+                )
+            }
+        }
 
-                Column(modifier = Modifier.padding(top = 25.dp, start = 10.dp)) {
-                    IconToggleButton(
-                        checked = uiState.isPhotoActive.value,
-                        onCheckedChange = { uiState.isPhotoActive.value = it }) {
-                        val tint by animateColorAsState(if (uiState.isPhotoActive.value) R.color.SecondaryColor else R.color.PrimaryColor)
-                        Icon(
-                            Icons.Filled.CameraAlt,
-                            contentDescription = "Video",
-                            tint = tint,
-                            modifier = Modifier.size(55.dp)
-                        )
-                    }
-                }
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(start = 110.dp, bottom = 100.dp)
+        ) {
+            val iconTint by animateColorAsState(if (uiState.isPhotoActive.value) R.color.PrimaryColor else Color.Gray)
+            val buttonBackground by animateColorAsState(
+                if (uiState.isPhotoActive.value) R.color.SecondaryColor else Color.Black.copy(alpha = 0.6f)
+            )
+            Button(
+                onClick = { viewModel.onActivatePhotoClicked() },
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = buttonBackground
+                ),
+                border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.CameraAlt,
+                    contentDescription = "Kamera",
+                    modifier = Modifier.size(30.dp),
+                    tint = iconTint
+                )
+                Text(text = "Foto")
             }
         }
     }
 
     LastCapturedImageView(viewModel)
     ScreenTimerView(uiState)
-}
-
-@Composable
-private fun TimerChoiceBox(uiState: CameraScreenState) {
-    Box(
-        modifier = Modifier.width(100.dp).height(250.dp)
-    ) {
-        Surface(
-            shape = CutCornerShape(5.dp),
-            color = Color(0, 0, 0, 30),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize().padding(top = 5.dp)
-            ) {
-                IconButton(
-                    onClick = {
-                        uiState.selectedTimerButton.value = 0
-                        uiState.isTimerChoiceVisible.value = false
-                    }
-                ) {
-                    Icon(
-                        Icons.Default.AccessTime,
-                        contentDescription = "3 Sekunden",
-                        tint = R.color.SecondaryColor,
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
-                Text(text = "3 Sek.")
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                IconButton(onClick = {
-                    uiState.selectedTimerButton.value = 1
-                    uiState.isTimerChoiceVisible.value = false
-                }) {
-                    Icon(
-                        Icons.Default.AccessTime,
-                        contentDescription = "5 Sekunden",
-                        tint = R.color.SecondaryColor,
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
-                Text(text = "5 Sek.")
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                IconButton(onClick = {
-                    uiState.selectedTimerButton.value = 2
-                    uiState.isTimerChoiceVisible.value = false
-                }) {
-                    Icon(
-                        Icons.Default.AccessTime,
-                        contentDescription = "10 Sekunden",
-                        tint = R.color.SecondaryColor,
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
-                Text(text = "10 Sek.")
-            }
-        }
-    }
 }
 
 @Composable
@@ -203,7 +183,7 @@ fun ScreenTimerView(uiState: CameraScreenState) {
             Text(
                 text = delay,
                 fontSize = 300.sp,
-                color = R.color.PrimaryTextColor
+                color = R.color.PrimaryColor
             )
         }
     }
@@ -211,17 +191,22 @@ fun ScreenTimerView(uiState: CameraScreenState) {
 
 @Composable
 fun LastCapturedImageView(viewModel: CameraViewModel) {
-    viewModel.uiState.lastCapturedPhotoAsBitmap.value?.let { image ->
+    viewModel.uiState.imageData.value?.imageBitmap?.let { image ->
         Column(
             modifier = Modifier.fillMaxSize().padding(bottom = 30.dp, end = 50.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         ) {
-            Button(onClick = {viewModel.onImageClicked()}, contentPadding = PaddingValues(0.dp), modifier = Modifier.width(300.dp).height(225.dp)) {
+            Button(
+                onClick = { viewModel.onImageClicked() },
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.width(300.dp).height(225.dp)
+            ) {
                 Image(
                     bitmap = image,
                     "",
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
             }
         }
@@ -229,14 +214,15 @@ fun LastCapturedImageView(viewModel: CameraViewModel) {
 }
 
 private fun calculateTimerDelay(uiState: CameraScreenState): Int {
-    return when (uiState.selectedTimerButton.value) {
+    return when (uiState.selectedTimer.value) {
         0 -> 3
         1 -> 5
         else -> 10
     }
 }
 
-private fun initRecord(uiState: CameraScreenState, viewModel: CameraViewModel) {
+private fun initRecord(viewModel: CameraViewModel) {
+    val uiState = viewModel.uiState
     uiState.countDown.value = calculateTimerDelay(uiState)
     viewModel.viewModelScope.launch {
         withContext(Dispatchers.IO) {

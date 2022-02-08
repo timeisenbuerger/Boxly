@@ -1,7 +1,7 @@
 package de.tei.boxly.ui.feature.main
 
-import de.tei.boxly.data.repo.FileRepository
 import de.tei.boxly.ui.feature.MainActivity
+import de.tei.boxly.ui.feature.MainActivity.Companion.windowInstance
 import de.tei.boxly.util.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +34,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun closeWindow() {
-        MainActivity.getWindowScope().window.isVisible = false
+        windowInstance.isVisible = false
         exitProcess(0)
     }
 }

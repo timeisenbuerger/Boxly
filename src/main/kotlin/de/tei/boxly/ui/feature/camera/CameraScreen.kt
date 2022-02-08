@@ -2,14 +2,22 @@ package de.tei.boxly.ui.feature.camera
 
 import CameraOverlay
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.window.FrameWindowScope
+import androidx.compose.runtime.remember
 
+@Composable
+private fun rememberCameraScreenState(uiState: CameraScreenState) {
+    remember { uiState }
+}
 
 @Composable
 fun CameraScreen(
     viewModel: CameraViewModel,
-    windowScope: FrameWindowScope?
 ) {
-    windowScope?.let { ComposeWebcamView(viewModel, 640, 480, 60, windowScope.window.width, windowScope.window.height) }
+    val uiState = viewModel.uiState
+    rememberCameraScreenState(uiState)
+
+    ComposeWebcamView(
+        viewModel = viewModel
+    )
     CameraOverlay(viewModel)
 }

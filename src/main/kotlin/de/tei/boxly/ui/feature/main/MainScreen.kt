@@ -4,6 +4,7 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -63,17 +64,29 @@ fun MainScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(top = 50.dp, end = 250.dp)
+            modifier = Modifier.fillMaxSize().padding(bottom = 275.dp)
+        ) {
+            Text(
+                text = "Boxly",
+                color = R.color.SecondaryColor,
+                fontSize = 100.sp
+            )
+        }
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(top = 100.dp, end = 250.dp)
         ) {
             OutlinedButton(
                 modifier = buttonModifier,
-                shape = CutCornerShape(10.dp),
+                shape = CircleShape,
                 onClick = { viewModel.onCameraClicked() },
                 colors = ButtonDefaults.textButtonColors(
-                    backgroundColor = R.color.SecondaryDarkColor,
-                    contentColor = R.color.SecondaryLightColor
+                    backgroundColor = R.color.PrimaryColor,
+                    contentColor = R.color.SecondaryColor
                 ),
-                border = BorderStroke(1.dp, R.color.SecondaryDarkColor),
+                border = BorderStroke(5.dp, R.color.SecondaryColor),
                 content = {
                     Column(
                         verticalArrangement = Arrangement.Center,
@@ -82,7 +95,7 @@ fun MainScreen(
                         Icon(
                             Icons.Filled.CameraAlt,
                             contentDescription = "Start",
-                            tint = R.color.SecondaryLightColor,
+                            tint = R.color.SecondaryColor,
                             modifier = Modifier.size(100.dp)
                         )
                         Text(
@@ -97,17 +110,17 @@ fun MainScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(top = 50.dp, start = 250.dp)
+            modifier = Modifier.fillMaxSize().padding(top = 100.dp, start = 250.dp)
         ) {
             OutlinedButton(
                 modifier = buttonModifier,
-                shape = CutCornerShape(10.dp),
+                shape = CircleShape,
                 onClick = { viewModel.onGalleryClicked() },
                 colors = ButtonDefaults.textButtonColors(
-                    backgroundColor = R.color.SecondaryDarkColor,
-                    contentColor = R.color.SecondaryLightColor
+                    backgroundColor = R.color.PrimaryColor,
+                    contentColor = R.color.SecondaryColor
                 ),
-                border = BorderStroke(1.dp, R.color.SecondaryDarkColor),
+                border = BorderStroke(5.dp, R.color.SecondaryColor),
                 content = {
                     Column(
                         verticalArrangement = Arrangement.Center,
@@ -116,7 +129,7 @@ fun MainScreen(
                         Icon(
                             Icons.Filled.PhotoLibrary,
                             contentDescription = "Start",
-                            tint = R.color.SecondaryLightColor,
+                            tint = R.color.SecondaryColor,
                             modifier = Modifier.size(100.dp)
                         )
                         Text(

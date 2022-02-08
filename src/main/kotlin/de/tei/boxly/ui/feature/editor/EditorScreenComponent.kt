@@ -1,19 +1,17 @@
 package de.tei.boxly.ui.feature.editor
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.ImageBitmap
 import com.arkivanov.decompose.ComponentContext
 import de.tei.boxly.di.AppComponent
+import de.tei.boxly.model.ImageData
 import de.tei.boxly.ui.navigation.Component
-import java.awt.image.BufferedImage
 import javax.inject.Inject
 
 class EditorScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
     private val onBackClicked: (toCameraScreen: Boolean) -> Unit,
-    private val imageBitmap: ImageBitmap?,
-    private val imageBuffered: BufferedImage?,
+    private val imageData: ImageData,
     private val sourceScreen: String
 ) : Component, ComponentContext by componentContext {
 
@@ -37,7 +35,7 @@ class EditorScreenComponent(
             onBackClicked(sourceScreen == "CameraScreen")
         }
 
-        viewModel.setOriginalImage(imageBitmap, imageBuffered)
+        viewModel.setOriginalImage(imageData)
         EditorScreen(
             viewModel = viewModel
         )
