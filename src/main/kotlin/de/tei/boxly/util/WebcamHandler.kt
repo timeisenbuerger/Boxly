@@ -2,14 +2,18 @@ package de.tei.boxly.util
 
 import com.github.sarxos.webcam.Webcam
 import com.github.sarxos.webcam.WebcamResolution
+import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver
 import java.awt.image.BufferedImage
 
-class WebcamHandler(
-    private val webcam: Webcam = Webcam.getDefault(),
-    private var fps: Int = 30,
-) {
+class WebcamHandler {
+    private val webcam: Webcam
+    private var fps: Int = 30
 
     init {
+        if (getOS() == OS.LINUX) {
+            Webcam.setDriver(V4l4jDriver())
+        }
+        webcam = Webcam.getDefault()
         webcam.setCustomViewSizes(WebcamResolution.FHD.size, WebcamResolution.UHD4K.size)
         webcam.viewSize = WebcamResolution.FHD.size
         open()

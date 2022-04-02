@@ -21,6 +21,7 @@ repositories {
 }
 
 val daggerVersion by extra("2.40.5")
+val webcamCaptureVersion by extra("0.3.12")
 
 dependencies {
     implementation(compose.desktop.currentOs)
@@ -41,13 +42,14 @@ dependencies {
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
     // Webcam dependencies
-    implementation("com.github.sarxos:webcam-capture:0.3.12")
+    implementation("com.github.sarxos:webcam-capture:$webcamCaptureVersion")
+    implementation("com.github.sarxos:webcam-capture-driver-v4l4j:$webcamCaptureVersion")
 
     // Kotlin coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
 
     // Extended material icons
-    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.2.0-alpha01-dev602")
+    implementation(compose.materialIconsExtended)
 
     /**
      * Testing Dependencies
@@ -75,16 +77,13 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
 }
 
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "11"
-}
-
 compose.desktop {
     application {
         mainClass = "de.tei.boxly.AppKt"
+
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "myapp"
+            packageName = "Boxly"
             packageVersion = "1.0.0"
 
             val iconsRoot = project.file("src/main/resources/drawables")

@@ -35,7 +35,7 @@ class FileRepository @Inject constructor() {
     private fun determinePathForOS(): String {
         return when(getOS()) {
             OS.WINDOWS -> "D:\\Entwicklung\\boxly-media-files"
-            OS.LINUX -> "we will see"
+            OS.LINUX -> "/home/pi/boxly-media-files"
             else -> "dont know"
         }
     }
