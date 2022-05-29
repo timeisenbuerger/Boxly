@@ -5,12 +5,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +37,34 @@ fun MainScreen(
                 tint = R.color.SecondaryLightColor,
                 modifier = Modifier.size(25.dp)
             )
+        }
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.End,
+        modifier = Modifier.fillMaxSize()
+            .padding(15.dp)
+    ) {
+        if (viewModel.uiState.showSettings.value) {
+            SettingsBox(viewModel)
+        } else {
+            Button(
+                onClick = { viewModel.showSettings(true) },
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = R.color.SecondaryColor,
+                    contentColor = R.color.PrimaryColor
+                ),
+                border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Einstellungen",
+                    modifier = Modifier.size(50.dp),
+                )
+                Text(text = "Einstellungen")
+            }
         }
     }
 

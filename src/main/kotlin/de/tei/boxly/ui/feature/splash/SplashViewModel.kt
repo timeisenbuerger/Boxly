@@ -1,5 +1,6 @@
 package de.tei.boxly.ui.feature.splash
 
+import de.tei.boxly.ui.feature.MainActivity
 import de.tei.boxly.util.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -19,6 +20,7 @@ class SplashViewModel @Inject constructor() : ViewModel() {
 
     override fun init(viewModelScope: CoroutineScope) {
         super.init(viewModelScope)
+        MainActivity.imageDataProvider.reloadImages(viewModelScope)
 
         viewModelScope.launch {
             delay(SPLASH_DELAY)

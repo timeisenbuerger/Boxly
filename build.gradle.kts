@@ -1,12 +1,11 @@
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     val kotlinVersion = "1.6.10"
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    id("org.jetbrains.compose") version "1.0.1"
+    id("org.jetbrains.compose") version "1.1.1"
 }
 
 group = "de.tei.boxly"
@@ -43,7 +42,7 @@ dependencies {
 
     // Webcam dependencies
     implementation("com.github.sarxos:webcam-capture:$webcamCaptureVersion")
-    implementation("com.github.sarxos:webcam-capture-driver-v4l4j:$webcamCaptureVersion")
+    implementation("io.humble:humble-video-all:0.2.1")
 
     // Kotlin coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")

@@ -1,6 +1,7 @@
 package de.tei.boxly.ui.feature.main
 
-import de.tei.boxly.ui.feature.MainActivity
+import com.github.sarxos.webcam.Webcam
+import de.tei.boxly.ui.feature.MainActivity.Companion.webcamHandler
 import de.tei.boxly.ui.feature.MainActivity.Companion.windowInstance
 import de.tei.boxly.util.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,9 @@ class MainViewModel @Inject constructor(
 
     private val _isGalleryClicked = MutableStateFlow(false)
     val isGalleryClicked: StateFlow<Boolean> = _isGalleryClicked
+
+    private val _uiState = MainScreenState()
+    val uiState = _uiState
 
     fun onCameraClicked() {
         _isCameraClicked.value = true
@@ -36,5 +40,13 @@ class MainViewModel @Inject constructor(
     fun closeWindow() {
         windowInstance.isVisible = false
         exitProcess(0)
+    }
+
+    fun showSettings(enable: Boolean) {
+        _uiState.showSettings.value = enable
+    }
+
+    fun saveAndApply(webcam: Webcam) {
+        webcamHandler.useWebcam(webcam)
     }
 }

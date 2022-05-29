@@ -3,6 +3,7 @@ package de.tei.boxly.ui.feature.main
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext
 import de.tei.boxly.di.AppComponent
+import de.tei.boxly.ui.feature.MainActivity
 import de.tei.boxly.ui.navigation.Component
 import javax.inject.Inject
 

@@ -12,6 +12,7 @@ import com.theapache64.cyclone.core.Intent
 import de.tei.boxly.App
 import de.tei.boxly.ui.navigation.NavHostComponent
 import de.tei.boxly.ui.value.BoxlyAppTheme
+import de.tei.boxly.util.ImageDataProvider
 import de.tei.boxly.util.WebcamHandler
 import androidx.compose.ui.window.application as setContent
 
@@ -28,6 +29,7 @@ class MainActivity : Activity() {
 
         lateinit var windowInstance: ComposeWindow
         val webcamHandler = WebcamHandler()
+        val imageDataProvider = ImageDataProvider()
     }
 
     override fun onCreate() {

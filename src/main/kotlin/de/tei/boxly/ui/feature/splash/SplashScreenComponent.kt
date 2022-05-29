@@ -3,6 +3,7 @@ package de.tei.boxly.ui.feature.splash
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext
 import de.tei.boxly.di.AppComponent
+import de.tei.boxly.ui.feature.MainActivity
 import de.tei.boxly.ui.navigation.Component
 import javax.inject.Inject
 
@@ -21,14 +22,12 @@ class SplashScreenComponent(
 
     @Composable
     override fun render() {
-
         val scope = rememberCoroutineScope()
         LaunchedEffect(splashViewModel) {
             splashViewModel.init(scope)
         }
 
         val isSplashFinished by splashViewModel.isSplashFinished.collectAsState()
-
         if (isSplashFinished) {
             onSplashFinished()
         }
