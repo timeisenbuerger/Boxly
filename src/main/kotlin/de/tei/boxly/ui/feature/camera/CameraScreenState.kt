@@ -11,9 +11,7 @@ class CameraScreenState {
     val isScreenActive = mutableStateOf(true)
     var isPhotoActive: MutableState<Boolean> = mutableStateOf(true)
     var isTimerChoiceVisible: MutableState<Boolean> = mutableStateOf(false)
-    var isQualityChoiceVisible: MutableState<Boolean> = mutableStateOf(false)
     var selectedTimer: MutableState<Int> = mutableStateOf(0)
-    var selectedQuality: MutableState<Int> = mutableStateOf(0)
     var countDown: MutableState<Int> = mutableStateOf(-1)
 
     var imageData: MutableState<ImageData?> = mutableStateOf(null)

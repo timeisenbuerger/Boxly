@@ -7,16 +7,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.tei.boxly.ui.feature.camera.QualityChoiceBox
 import de.tei.boxly.ui.value.R
 
 
@@ -25,6 +24,9 @@ import de.tei.boxly.ui.value.R
 fun MainScreen(
     viewModel: MainViewModel,
 ) {
+    val uiState = viewModel.uiState
+    remember { uiState }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
@@ -46,9 +48,13 @@ fun MainScreen(
         modifier = Modifier.fillMaxSize()
             .padding(15.dp)
     ) {
-        if (viewModel.uiState.showSettings.value) {
-            SettingsBox(viewModel)
-        } else {
+        if (viewModel.uiState.isSeetingsSelected.value) {
+            CameraChoiceBox(viewModel)
+        }
+        else if (uiState.isQualityChoiceVisible.value) {
+            QualityChoiceBox(viewModel)
+        }
+        else {
             Button(
                 onClick = { viewModel.showSettings(true) },
                 shape = CircleShape,
@@ -59,11 +65,31 @@ fun MainScreen(
                 border = BorderStroke(1.dp, R.color.SecondaryTextColor)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Einstellungen",
+                    imageVector = Icons.Filled.CameraAlt,
+                    contentDescription = "Kamera",
                     modifier = Modifier.size(50.dp),
                 )
-                Text(text = "Einstellungen")
+                Text(text = "Kamera")
+            }
+
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Button(
+                onClick = { viewModel.onQualityChoiceClicked() },
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = R.color.SecondaryColor,
+                    contentColor = R.color.PrimaryColor
+                ),
+                border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.HighQuality,
+                    contentDescription = "Qualität",
+                    modifier = Modifier.size(50.dp),
+                )
+                val quality = if (viewModel.uiState.selectedQuality.value == 0) "Full HD" else "4K UHD"
+                Text(text = quality)
             }
         }
     }

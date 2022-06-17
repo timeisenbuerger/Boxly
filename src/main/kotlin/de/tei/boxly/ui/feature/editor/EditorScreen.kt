@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,8 +41,7 @@ fun EditorScreen(
     if (viewModel.uiState.isEditClicked.value) {
         paddingValues = PaddingValues(15.dp, 15.dp, 15.dp, 200.dp)
         icon = Icons.Filled.ChevronRight
-    }
-    else {
+    } else {
         paddingValues = PaddingValues(15.dp)
         icon = Icons.Filled.ChevronLeft
     }
@@ -96,6 +96,31 @@ fun EditorScreen(
 
     if (viewModel.uiState.isEditClicked.value) {
         FilterView(viewModel)
+    }
+
+    if (viewModel.isImageEdited()) {
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier.fillMaxSize()
+                .padding(15.dp)
+        ) {
+            Button(
+                onClick = { viewModel.saveEditedImage() },
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = R.color.SecondaryColor,
+                    contentColor = R.color.PrimaryColor
+                ),
+                border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Save,
+                    contentDescription = "Speichern",
+                    modifier = Modifier.size(50.dp),
+                )
+            }
+        }
     }
 }
 

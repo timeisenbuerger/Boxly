@@ -10,13 +10,15 @@ class WebcamHandler {
 
     init {
         webcam.setCustomViewSizes(WebcamResolution.FHD.size, WebcamResolution.UHD4K.size)
-        webcam.viewSize = WebcamResolution.FHD.size
+        setResolutionToFullHd()
         open()
     }
 
     fun useWebcam(webcam: Webcam) {
         close()
         this.webcam = webcam
+        this.webcam.setCustomViewSizes(WebcamResolution.FHD.size, WebcamResolution.UHD4K.size)
+        setResolutionToFullHd()
         open()
     }
 
@@ -29,8 +31,8 @@ class WebcamHandler {
 
     fun setResolutionToUHD4K() {
         this.close()
-        webcam.viewSize = WebcamResolution.FHD.size
-        fps = 15
+        webcam.viewSize = WebcamResolution.UHD4K.size
+        fps = 5
         this.open()
     }
 

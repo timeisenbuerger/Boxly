@@ -90,12 +90,4 @@ class VideoRecorder {
         }
         return image
     }
-
-    fun determinePathForOS(): String {
-        return when (getOS()) {
-            OS.WINDOWS -> "D:\\Entwicklung\\boxly-media-files"
-            OS.LINUX -> "/home/pi/boxly-media-files"
-            else -> "dont know"
-        }
-    }
 }

@@ -62,29 +62,6 @@ class CameraViewModel @Inject constructor(
         uiState.isTimerChoiceVisible.value = false
     }
 
-    fun onQualityChoiceClicked() {
-        uiState.isQualityChoiceVisible.value = !uiState.isQualityChoiceVisible.value
-    }
-
-    fun onSelectQuality(quality: Int) {
-        if (quality != uiState.selectedQuality.value) {
-            viewModelScope.launch(Dispatchers.IO) {
-                withContext(Dispatchers.IO) {
-                    uiState.isScreenActive.value = false
-                    when (quality) {
-                        0 -> webcamHandler.setResolutionToFullHd()
-                        1 -> webcamHandler.setResolutionToUHD4K()
-                    }
-                    delay(1000)
-                    uiState.isScreenActive.value = true
-                }
-            }
-        }
-
-        uiState.selectedQuality.value = quality
-        uiState.isQualityChoiceVisible.value = false
-    }
-
     fun onImageClicked() {
         _isImageClicked.value = true
         enableScreen(false)
@@ -118,7 +95,7 @@ class CameraViewModel @Inject constructor(
     }
 
     fun recordVideo() {
-        val path = videoRecorder.determinePathForOS()
+        val path = determinePathForOS()
         val milliseconds = LocalDateTime.now().nano * 1000
         val fileName = "$path/$milliseconds.mp4"
         videoRecorder.recordScreen(fileName, 10, 8)

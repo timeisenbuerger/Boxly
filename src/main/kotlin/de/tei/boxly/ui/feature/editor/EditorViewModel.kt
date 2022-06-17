@@ -1,17 +1,18 @@
 package de.tei.boxly.ui.feature.editor
 
+import androidx.compose.ui.graphics.asSkiaBitmap
+import androidx.compose.ui.graphics.toAwtImage
 import de.tei.boxly.di.local.FileRepository
-import de.tei.boxly.model.SampleFilterData
 import de.tei.boxly.model.ImageData
-import de.tei.boxly.util.FilterImpl
-import de.tei.boxly.util.ViewModel
-import de.tei.boxly.util.convertToBitmap
-import de.tei.boxly.util.resize
+import de.tei.boxly.model.SampleFilterData
+import de.tei.boxly.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.skiko.toBufferedImage
+import org.jetbrains.skiko.toImage
 import javax.inject.Inject
 
 class EditorViewModel @Inject constructor(
@@ -27,6 +28,7 @@ class EditorViewModel @Inject constructor(
     private val _uiState = EditorScreenState()
     val uiState = _uiState
     lateinit var viewModelScope: CoroutineScope
+    lateinit var imageData: ImageData
 
     var sampleFilters: List<SampleFilterData> = listOf()
 
@@ -34,6 +36,8 @@ class EditorViewModel @Inject constructor(
     val isBackClicked: StateFlow<Boolean> = _isBackClicked
 
     fun setOriginalImage(imageData: ImageData) {
+        this.imageData = imageData
+
         uiState.originalImage.value = imageData.resizedImageBitmap
         uiState.editedImage.value = uiState.originalImage.value
         imageData.imageBuffered.let { uiState.originalBufferedImage.value = resize(it, it.width, it.height) }
@@ -66,12 +70,24 @@ class EditorViewModel @Inject constructor(
                 }
             }
 
-            uiState.editedImage.value =
-                if (filteredImage != null) {
-                    convertToBitmap(filteredImage)
-                } else {
-                    uiState.originalImage.value
-                }
+            if (filteredImage != null) {
+                uiState.editedImage.value = convertToBitmap(filteredImage)
+                uiState.isEdited.value = true
+            } else {
+                uiState.editedImage.value = uiState.originalImage.value
+                uiState.isEdited.value = false
+            }
+
+        }
+    }
+
+    fun saveEditedImage() {
+        uiState.editedImage.value?.let {
+            val byteArray = convertBitmapToByteArray(it)
+            byteArray.let { bytes ->
+                val bufferedImage = convertByteArrayToBufferedImage(bytes!!)
+                fileRepository.saveImage(bufferedImage!!)
+            }
         }
     }
 
@@ -104,5 +120,9 @@ class EditorViewModel @Inject constructor(
                 else -> SampleFilterData(it, filterName, FilterType.NOTHING)
             }
         }
+    }
+
+    fun isImageEdited(): Boolean {
+        return uiState.isEdited.value
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import de.tei.boxly.ui.feature.main.MainViewModel
 import de.tei.boxly.ui.value.R
 
 @Composable
@@ -86,7 +87,7 @@ fun TimerChoiceBox(viewModel: CameraViewModel) {
 }
 
 @Composable
-fun QualityChoiceBox(viewModel: CameraViewModel) {
+fun QualityChoiceBox(viewModel: MainViewModel) {
     Box(
         modifier = Modifier.width(100.dp).height(175.dp)
     ) {

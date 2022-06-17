@@ -46,9 +46,7 @@ fun CameraOverlay(viewModel: CameraViewModel) {
         ) {
             if (uiState.isTimerChoiceVisible.value) {
                 TimerChoiceBox(viewModel)
-            } else if (uiState.isQualityChoiceVisible.value) {
-                QualityChoiceBox(viewModel)
-            } else {
+            }  else {
                 Button(
                     onClick = { viewModel.onTimerChoiceClicked() },
                     shape = CircleShape,
@@ -64,26 +62,6 @@ fun CameraOverlay(viewModel: CameraViewModel) {
                         modifier = Modifier.size(50.dp),
                     )
                     Text(text = "${calculateTimerDelay(uiState)} Sek.")
-                }
-
-                Spacer(modifier = Modifier.padding(10.dp))
-
-                Button(
-                    onClick = { viewModel.onQualityChoiceClicked() },
-                    shape = CircleShape,
-                    colors = ButtonDefaults.textButtonColors(
-                        backgroundColor = R.color.SecondaryColor,
-                        contentColor = R.color.PrimaryColor
-                    ),
-                    border = BorderStroke(1.dp, R.color.SecondaryTextColor)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.HighQuality,
-                        contentDescription = "Qualität",
-                        modifier = Modifier.size(50.dp),
-                    )
-                    val quality = if (uiState.selectedQuality.value == 0) "Full HD" else "4K UHD"
-                    Text(text = quality)
                 }
             }
         }

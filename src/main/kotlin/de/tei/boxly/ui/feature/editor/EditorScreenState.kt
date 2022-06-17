@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage
 
 class EditorScreenState {
     var isEditClicked: MutableState<Boolean> = mutableStateOf(false)
+    var isEdited: MutableState<Boolean> = mutableStateOf(false)
     var originalImage: MutableState<ImageBitmap?> = mutableStateOf(null)
     var originalBufferedImage: MutableState<BufferedImage?> = mutableStateOf(null)
     var editedImage: MutableState<ImageBitmap?> = mutableStateOf(null)
