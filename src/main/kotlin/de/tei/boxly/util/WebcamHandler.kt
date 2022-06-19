@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage
 class WebcamHandler {
     private var webcam: Webcam = Webcam.getDefault()
     private var fps: Int = 30
+    private lateinit var lastCapturedImage: BufferedImage;
 
     init {
         webcam.setCustomViewSizes(WebcamResolution.FHD.size, WebcamResolution.UHD4K.size)
@@ -34,6 +35,14 @@ class WebcamHandler {
         webcam.viewSize = WebcamResolution.UHD4K.size
         fps = 5
         this.open()
+    }
+
+    fun setLastCapturedImage(img: BufferedImage) {
+        this.lastCapturedImage = img
+    }
+
+    fun getLastCapturedImage() : BufferedImage {
+        return lastCapturedImage
     }
 
     fun getImage(): BufferedImage? {

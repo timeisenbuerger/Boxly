@@ -13,12 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.tei.boxly.ui.base.BackButton
+import de.tei.boxly.ui.base.Pulsating
 import de.tei.boxly.ui.feature.camera.CameraScreenState
 import de.tei.boxly.ui.feature.camera.CameraViewModel
-import de.tei.boxly.ui.feature.camera.QualityChoiceBox
 import de.tei.boxly.ui.feature.camera.TimerChoiceBox
 import de.tei.boxly.ui.value.R
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +47,7 @@ fun CameraOverlay(viewModel: CameraViewModel) {
         ) {
             if (uiState.isTimerChoiceVisible.value) {
                 TimerChoiceBox(viewModel)
-            }  else {
+            } else {
                 Button(
                     onClick = { viewModel.onTimerChoiceClicked() },
                     shape = CircleShape,
@@ -147,6 +148,10 @@ fun CameraOverlay(viewModel: CameraViewModel) {
 
     LastCapturedImageView(viewModel)
     ScreenTimerView(uiState)
+
+    if (uiState.isRecording.value) {
+        RecordingView()
+    }
 }
 
 @Composable
@@ -188,6 +193,29 @@ fun LastCapturedImageView(viewModel: CameraViewModel) {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun RecordingView() {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(bottom = 30.dp, start = 50.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Pulsating {
+            Surface(
+                color = R.color.RecordingRed,
+                shape = CircleShape,
+                modifier = Modifier.size(50.dp),
+                content = {}
+            )
+        }
+        Text(
+            text = "REC",
+            color = R.color.PrimaryColor,
+            modifier = Modifier.padding(top = 10.dp, start = 7.dp)
+        )
     }
 }
 

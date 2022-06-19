@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import de.tei.boxly.ui.feature.MainActivity.Companion.webcamHandler
 import de.tei.boxly.ui.feature.MainActivity.Companion.windowInstance
+import de.tei.boxly.util.convertToBitmap
+import de.tei.boxly.util.resize
 import de.tei.boxly.util.resizeAndConvertToBitmap
 import kotlinx.coroutines.*
 
@@ -67,7 +69,8 @@ private fun handleImageCapturing(
         if (viewModel.isCapturePhotoClicked.value) {
             viewModel.capturePhoto(bufferedImage)
         }
-        viewModel.uiState.webcamViewImage.value =
-            resizeAndConvertToBitmap(bufferedImage, windowInstance.width, windowInstance.height)
+        val resized = resize(bufferedImage, windowInstance.width, windowInstance.height)
+        viewModel.uiState.webcamViewImage.value = convertToBitmap(resized)
+        webcamHandler.setLastCapturedImage(bufferedImage)
     }
 }

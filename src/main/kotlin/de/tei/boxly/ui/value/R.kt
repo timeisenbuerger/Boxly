@@ -13,6 +13,8 @@ object R {
         val SecondaryDarkColor = Color(61, 62, 62, 255)
         val PrimaryTextColor = Color(0, 0, 0, 255)
         val SecondaryTextColor = Color(255, 255, 255, 255)
+
+        val RecordingRed = Color(205, 0, 0, 255)
     }
 
     @Suppress("ClassName")

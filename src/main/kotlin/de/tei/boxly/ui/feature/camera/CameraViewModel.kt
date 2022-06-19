@@ -98,6 +98,6 @@ class CameraViewModel @Inject constructor(
         val path = determinePathForOS()
         val milliseconds = LocalDateTime.now().nano * 1000
         val fileName = "$path/$milliseconds.mp4"
-        videoRecorder.recordScreen(fileName, 10, 8)
+        videoRecorder.recordScreen(fileName, 10, 5, this)
     }
 }

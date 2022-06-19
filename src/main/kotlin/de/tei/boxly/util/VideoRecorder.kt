@@ -1,6 +1,7 @@
 package de.tei.boxly.util
 
 import de.tei.boxly.ui.feature.MainActivity.Companion.webcamHandler
+import de.tei.boxly.ui.feature.camera.CameraViewModel
 import io.humble.video.*
 import io.humble.video.awt.MediaPictureConverter
 import io.humble.video.awt.MediaPictureConverterFactory
@@ -15,9 +16,9 @@ class VideoRecorder {
     fun recordScreen(
         filename: String,
         duration: Int,
-        snapsPerSecond: Int
+        snapsPerSecond: Int,
+        viewModel: CameraViewModel? = null
     ) {
-        val webcam = webcamHandler.getWebcam()
         val muxer = Muxer.make(filename, null, null)
         val viewSize = webcamHandler.getWebcam().viewSize
         val codec = Codec.findEncodingCodec(muxer.format.defaultVideoCodecId)
@@ -46,9 +47,15 @@ class VideoRecorder {
 
         val packet = MediaPacket.make()
         var i = 0
-        println("######################## START RECORDING ##############################")
+
+
+        viewModel?.let {
+            println("######################## START RECORDING ##############################")
+            viewModel.uiState.isRecording.value = true
+        }
+
         while (i < duration / framerate.double) {
-            val image = webcam.image
+            val image = webcamHandler.getLastCapturedImage()
             val frame = convertToType(image, BufferedImage.TYPE_3BYTE_BGR)
             println("Record frame $frame")
             if (converter == null) {
@@ -65,14 +72,17 @@ class VideoRecorder {
             Thread.sleep((1000 * framerate.double).toLong())
             i++
         }
-        println("######################## END RECORDING ##############################")
-
         do {
             encoder.encode(packet, null)
             if (packet.isComplete) {
                 muxer.write(packet, false)
             }
         } while (packet.isComplete)
+
+        viewModel?.let {
+            println("######################## END RECORDING ##############################")
+            viewModel.uiState.isRecording.value = false
+        }
 
         muxer.close()
     }
