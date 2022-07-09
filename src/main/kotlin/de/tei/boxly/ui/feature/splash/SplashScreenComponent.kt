@@ -32,8 +32,6 @@ class SplashScreenComponent(
             onSplashFinished()
         }
 
-        SplashScreen(
-            viewModel = splashViewModel
-        )
+        SplashScreen()
     }
 }

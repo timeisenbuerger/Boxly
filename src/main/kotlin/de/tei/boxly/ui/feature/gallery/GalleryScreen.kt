@@ -35,7 +35,9 @@ fun GalleryScreen(viewModel: GalleryViewModel) {
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        BackButton { viewModel.onBackClicked() }
+        BackButton(
+            onBackClicked = { viewModel.onBackClicked() }
+        )
 
         val list = uiState.imageDataList.value
         LazyVerticalGrid(

@@ -3,16 +3,13 @@ package de.tei.boxly.ui.feature.camera
 import de.tei.boxly.di.local.FileRepository
 import de.tei.boxly.model.ImageData
 import de.tei.boxly.ui.feature.MainActivity
-import de.tei.boxly.ui.feature.MainActivity.Companion.webcamHandler
 import de.tei.boxly.ui.feature.MainActivity.Companion.windowInstance
 import de.tei.boxly.util.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.awt.image.BufferedImage
-import java.io.File
 import java.time.LocalDateTime
-import java.util.Date
 import javax.inject.Inject
 
 class CameraViewModel @Inject constructor(
@@ -92,6 +89,7 @@ class CameraViewModel @Inject constructor(
         )
         fileRepository.saveImage(bufferedImage)
         MainActivity.imageDataProvider.reloadImages(viewModelScope)
+        uiState.isUiEnabled.value = true
     }
 
     fun recordVideo() {
@@ -99,5 +97,6 @@ class CameraViewModel @Inject constructor(
         val milliseconds = LocalDateTime.now().nano * 1000
         val fileName = "$path/$milliseconds.mp4"
         videoRecorder.recordScreen(fileName, 10, 5, this)
+        uiState.isUiEnabled.value = true
     }
 }

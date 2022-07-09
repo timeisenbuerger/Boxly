@@ -44,7 +44,7 @@ class MainActivity : Activity() {
                 onCloseRequest = ::exitApplication,
                 title = "${App.appArgs.appName} (${App.appArgs.version})",
                 icon = painterResource("drawables/launcher_icons/system.png"),
-                state = rememberWindowState(placement = WindowPlacement.Maximized),
+                state = rememberWindowState(placement = WindowPlacement.Fullscreen),
             ) {
                 windowInstance = this.window
 

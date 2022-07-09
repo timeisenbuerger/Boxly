@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class CameraScreenState {
     val isScreenActive = mutableStateOf(true)
     val isRecording = mutableStateOf(false)
+    val isUiEnabled = mutableStateOf(true)
     var isPhotoActive: MutableState<Boolean> = mutableStateOf(true)
     var isTimerChoiceVisible: MutableState<Boolean> = mutableStateOf(false)
     var selectedTimer: MutableState<Int> = mutableStateOf(0)

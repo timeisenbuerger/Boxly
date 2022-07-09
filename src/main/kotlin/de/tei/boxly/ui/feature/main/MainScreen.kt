@@ -99,8 +99,8 @@ fun MainScreen(
         contentAlignment = Alignment.Center
     ) {
         val buttonModifier = Modifier
-            .width(width = 200.dp)
-            .height(height = 200.dp)
+            .width(width = 150.dp)
+            .height(height = 150.dp)
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -150,7 +150,7 @@ fun MainScreen(
                             Icons.Filled.CameraAlt,
                             contentDescription = "Start",
                             tint = R.color.SecondaryColor,
-                            modifier = Modifier.size(100.dp)
+                            modifier = Modifier.size(75.dp)
                         )
                         Text(
                             text = "Kamera",
@@ -184,7 +184,7 @@ fun MainScreen(
                             Icons.Filled.PhotoLibrary,
                             contentDescription = "Start",
                             tint = R.color.SecondaryColor,
-                            modifier = Modifier.size(100.dp)
+                            modifier = Modifier.size(75.dp)
                         )
                         Text(
                             text = "Galerie",

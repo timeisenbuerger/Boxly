@@ -2,6 +2,7 @@ package de.tei.boxly.ui.navigation
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.crossfadeScale
 import com.arkivanov.decompose.router.replaceCurrent
@@ -123,6 +124,7 @@ class NavHostComponent(
         }
     }
 
+    @OptIn(ExperimentalDecomposeApi::class)
     @Composable
     override fun render() {
         Children(

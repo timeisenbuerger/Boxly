@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.tei.boxly.ui.base.BackButton
@@ -36,7 +35,8 @@ fun CameraOverlay(viewModel: CameraViewModel) {
         modifier = Modifier.fillMaxSize()
     ) {
         BackButton(
-            onBackClicked = { viewModel.onBackClicked() }
+            onBackClicked = { viewModel.onBackClicked() },
+            isEnabled = uiState.isUiEnabled.value
         )
 
         Column(
@@ -50,6 +50,7 @@ fun CameraOverlay(viewModel: CameraViewModel) {
             } else {
                 Button(
                     onClick = { viewModel.onTimerChoiceClicked() },
+                    enabled = uiState.isUiEnabled.value,
                     shape = CircleShape,
                     colors = ButtonDefaults.textButtonColors(
                         backgroundColor = R.color.SecondaryColor,
@@ -90,7 +91,8 @@ fun CameraOverlay(viewModel: CameraViewModel) {
                 colors = ButtonDefaults.textButtonColors(
                     backgroundColor = buttonBackground
                 ),
-                border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+                border = BorderStroke(1.dp, R.color.SecondaryTextColor),
+                enabled = uiState.isUiEnabled.value
             ) {
                 Icon(
                     imageVector = videoIcon,
@@ -106,9 +108,12 @@ fun CameraOverlay(viewModel: CameraViewModel) {
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            IconButton(onClick = {
-                initRecord(viewModel)
-            }) {
+            IconButton(
+                onClick = {
+                    initRecord(viewModel)
+                },
+                enabled = uiState.isUiEnabled.value
+            ) {
                 Icon(
                     Icons.Filled.RadioButtonChecked,
                     contentDescription = "Start",
@@ -133,7 +138,8 @@ fun CameraOverlay(viewModel: CameraViewModel) {
                 colors = ButtonDefaults.textButtonColors(
                     backgroundColor = buttonBackground
                 ),
-                border = BorderStroke(1.dp, R.color.SecondaryTextColor)
+                border = BorderStroke(1.dp, R.color.SecondaryTextColor),
+                enabled = uiState.isUiEnabled.value
             ) {
                 Icon(
                     imageVector = Icons.Filled.CameraAlt,
@@ -182,6 +188,7 @@ fun LastCapturedImageView(viewModel: CameraViewModel) {
         ) {
             Button(
                 onClick = { viewModel.onImageClicked() },
+                enabled = viewModel.uiState.isUiEnabled.value,
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier.width(300.dp).height(225.dp)
             ) {
@@ -230,6 +237,8 @@ private fun calculateTimerDelay(uiState: CameraScreenState): Int {
 private fun initRecord(viewModel: CameraViewModel) {
     val uiState = viewModel.uiState
     uiState.countDown.value = calculateTimerDelay(uiState)
+    uiState.isUiEnabled.value = false
+
     viewModel.viewModelScope.launch {
         withContext(Dispatchers.IO) {
             delay(1000)
@@ -242,6 +251,7 @@ private fun initRecord(viewModel: CameraViewModel) {
             if (uiState.isPhotoActive.value) {
                 viewModel.onCapturePhotoClicked()
             } else {
+                uiState.isRecording.value = true;
                 viewModel.recordVideo()
             }
         }

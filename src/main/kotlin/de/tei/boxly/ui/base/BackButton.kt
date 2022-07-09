@@ -17,7 +17,8 @@ import de.tei.boxly.ui.value.R
 
 @Composable
 fun BackButton(
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    isEnabled: Boolean = false
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -26,6 +27,7 @@ fun BackButton(
     ) {
         OutlinedButton(
             modifier = Modifier.width(60.dp).height(60.dp),
+            enabled = isEnabled,
             shape = CircleShape,
             onClick = { onBackClicked() },
             colors = ButtonDefaults.textButtonColors(

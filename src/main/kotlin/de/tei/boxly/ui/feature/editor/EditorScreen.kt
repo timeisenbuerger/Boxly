@@ -76,7 +76,9 @@ fun EditorScreen(
         )
     }
 
-    BackButton { viewModel.onBackClicked() }
+    BackButton(
+        onBackClicked = { viewModel.onBackClicked() }
+    )
 
     Column(
         modifier = Modifier.fillMaxSize(),
