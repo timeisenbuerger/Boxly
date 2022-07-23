@@ -98,7 +98,7 @@ class EditorViewModel @Inject constructor(
             "drawables/sample_filters/$boston - Blur.jpg",
             "drawables/sample_filters/$boston - Dither.jpg",
             "drawables/sample_filters/$boston - GreyScale.jpg",
-            "drawables/sample_filters/$boston - Mosaic.jpg",
+//            "drawables/sample_filters/$boston - Mosaic.jpg",
             "drawables/sample_filters/$boston - Sepia.jpg",
             "drawables/sample_filters/$boston - Sharpen.jpg"
         )
@@ -116,7 +116,7 @@ class EditorViewModel @Inject constructor(
                 FilterType.GREY_SCALE.value -> SampleFilterData(it, filterName, FilterType.GREY_SCALE)
                 FilterType.SEPIA.value -> SampleFilterData(it, filterName, FilterType.SEPIA)
                 FilterType.DITHER.value -> SampleFilterData(it, filterName, FilterType.DITHER)
-                FilterType.MOSAIC.value -> SampleFilterData(it, filterName, FilterType.MOSAIC)
+//                FilterType.MOSAIC.value -> SampleFilterData(it, filterName, FilterType.MOSAIC)
                 else -> SampleFilterData(it, filterName, FilterType.NOTHING)
             }
         }

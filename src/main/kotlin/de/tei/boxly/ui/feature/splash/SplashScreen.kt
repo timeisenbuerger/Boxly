@@ -29,7 +29,7 @@ fun SplashScreen() {
             text = "Boxly",
             color = R.color.SecondaryColor,
             fontSize = 100.sp,
-            modifier = Modifier.padding(bottom = 275.dp)
+            modifier = Modifier.padding(bottom = 200.dp)
         )
     }
 }

@@ -18,7 +18,7 @@ import de.tei.boxly.ui.value.R
 @Composable
 fun BackButton(
     onBackClicked: () -> Unit,
-    isEnabled: Boolean = false
+    isEnabled: Boolean = true
 ) {
     Column(
         verticalArrangement = Arrangement.Top,

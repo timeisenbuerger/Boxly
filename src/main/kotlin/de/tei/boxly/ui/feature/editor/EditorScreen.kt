@@ -1,10 +1,10 @@
 package de.tei.boxly.ui.feature.editor
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -149,14 +149,17 @@ fun FilterView(viewModel: EditorViewModel) {
 
 @Composable
 fun SampleFilters(viewModel: EditorViewModel) {
-    LazyRow(
-        modifier = Modifier.fillMaxWidth().height(175.dp),
-        contentPadding = PaddingValues(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(25.dp),
-    ) {
-        items(items = viewModel.sampleFilters) { item ->
-            FilterItem(viewModel, item)
+    Box (modifier = Modifier.fillMaxSize()) {
+        LazyRow(
+            modifier = Modifier.fillMaxWidth().height(175.dp),
+            contentPadding = PaddingValues(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(25.dp),
+        ) {
+            items(items = viewModel.sampleFilters) { item ->
+                FilterItem(viewModel, item)
+            }
         }
+
     }
 }
 

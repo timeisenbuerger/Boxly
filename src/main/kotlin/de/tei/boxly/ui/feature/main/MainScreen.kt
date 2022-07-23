@@ -27,20 +27,20 @@ fun MainScreen(
     val uiState = viewModel.uiState
     remember { uiState }
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier.size(50.dp)
-    ) {
-        Button(onClick = { viewModel.closeWindow() }, Modifier.fillMaxSize()) {
-            Icon(
-                Icons.Filled.Close,
-                contentDescription = "Schließen",
-                tint = R.color.SecondaryLightColor,
-                modifier = Modifier.size(25.dp)
-            )
-        }
-    }
+//    Column(
+//        verticalArrangement = Arrangement.Top,
+//        horizontalAlignment = Alignment.Start,
+//        modifier = Modifier.size(50.dp)
+//    ) {
+//        Button(onClick = { viewModel.closeWindow() }, Modifier.fillMaxSize()) {
+//            Icon(
+//                Icons.Filled.Close,
+//                contentDescription = "Schließen",
+//                tint = R.color.SecondaryLightColor,
+//                modifier = Modifier.size(25.dp)
+//            )
+//        }
+//    }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -118,12 +118,12 @@ fun MainScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(bottom = 275.dp)
+            modifier = Modifier.fillMaxSize().padding(bottom = 200.dp)
         ) {
             Text(
                 text = "Boxly",
                 color = R.color.SecondaryColor,
-                fontSize = 100.sp
+                fontSize = 75.sp
             )
         }
 
