@@ -23,7 +23,7 @@ fun BackButton(
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
-        modifier = Modifier.padding(15.dp).zIndex(1f)
+        modifier = Modifier.padding(start = 15.dp, top = 20.dp).zIndex(1f)
     ) {
         OutlinedButton(
             modifier = Modifier.width(60.dp).height(60.dp),

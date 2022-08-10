@@ -11,4 +11,5 @@ class EditorScreenState {
     var originalImage: MutableState<ImageBitmap?> = mutableStateOf(null)
     var originalBufferedImage: MutableState<BufferedImage?> = mutableStateOf(null)
     var editedImage: MutableState<ImageBitmap?> = mutableStateOf(null)
+    var showImageSavedText: MutableState<Boolean> = mutableStateOf(false)
 }

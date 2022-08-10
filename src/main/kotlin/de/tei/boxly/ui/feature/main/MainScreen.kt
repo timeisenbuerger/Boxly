@@ -46,7 +46,7 @@ fun MainScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.End,
         modifier = Modifier.fillMaxSize()
-            .padding(15.dp)
+            .padding(end = 15.dp, top = 20.dp)
     ) {
         if (viewModel.uiState.isSeetingsSelected.value) {
             CameraChoiceBox(viewModel)
@@ -118,7 +118,7 @@ fun MainScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(bottom = 200.dp)
+            modifier = Modifier.fillMaxSize().padding(bottom = 150.dp)
         ) {
             Text(
                 text = "Boxly",

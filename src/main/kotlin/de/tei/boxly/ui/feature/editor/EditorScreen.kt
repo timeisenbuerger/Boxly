@@ -1,10 +1,10 @@
 package de.tei.boxly.ui.feature.editor
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,7 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import de.tei.boxly.model.SampleFilterData
 import de.tei.boxly.ui.base.BackButton
@@ -105,7 +107,7 @@ fun EditorScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.End,
             modifier = Modifier.fillMaxSize()
-                .padding(15.dp)
+                .padding(end = 15.dp, top = 20.dp)
         ) {
             Button(
                 onClick = { viewModel.saveEditedImage() },
@@ -122,6 +124,20 @@ fun EditorScreen(
                     modifier = Modifier.size(50.dp),
                 )
             }
+        }
+    }
+
+    if (viewModel.uiState.showImageSavedText.value) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(
+                text = "Gespeichert",
+                color = R.color.PrimaryColor,
+                fontSize = 150.sp
+            )
         }
     }
 }
@@ -149,17 +165,14 @@ fun FilterView(viewModel: EditorViewModel) {
 
 @Composable
 fun SampleFilters(viewModel: EditorViewModel) {
-    Box (modifier = Modifier.fillMaxSize()) {
-        LazyRow(
-            modifier = Modifier.fillMaxWidth().height(175.dp),
-            contentPadding = PaddingValues(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(25.dp),
-        ) {
-            items(items = viewModel.sampleFilters) { item ->
-                FilterItem(viewModel, item)
-            }
+    LazyRow(
+        modifier = Modifier.fillMaxWidth().height(175.dp),
+        contentPadding = PaddingValues(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(25.dp),
+    ) {
+        items(items = viewModel.sampleFilters) { item ->
+            FilterItem(viewModel, item)
         }
-
     }
 }
 

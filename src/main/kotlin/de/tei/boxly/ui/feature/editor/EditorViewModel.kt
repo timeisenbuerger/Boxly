@@ -6,11 +6,9 @@ import de.tei.boxly.di.local.FileRepository
 import de.tei.boxly.model.ImageData
 import de.tei.boxly.model.SampleFilterData
 import de.tei.boxly.util.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import org.jetbrains.skiko.toBufferedImage
 import org.jetbrains.skiko.toImage
 import javax.inject.Inject
@@ -87,6 +85,14 @@ class EditorViewModel @Inject constructor(
             byteArray.let { bytes ->
                 val bufferedImage = convertByteArrayToBufferedImage(bytes!!)
                 fileRepository.saveImage(bufferedImage!!)
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    uiState.showImageSavedText.value = true
+                    for (i in 2 downTo 0 step 1) {
+                        delay(1000)
+                    }
+                    uiState.showImageSavedText.value = false
+                }
             }
         }
     }
@@ -96,7 +102,7 @@ class EditorViewModel @Inject constructor(
         val imagePaths = listOf(
             "drawables/sample_filters/${boston}.jpg",
             "drawables/sample_filters/$boston - Blur.jpg",
-            "drawables/sample_filters/$boston - Dither.jpg",
+//            "drawables/sample_filters/$boston - Dither.jpg",
             "drawables/sample_filters/$boston - GreyScale.jpg",
 //            "drawables/sample_filters/$boston - Mosaic.jpg",
             "drawables/sample_filters/$boston - Sepia.jpg",

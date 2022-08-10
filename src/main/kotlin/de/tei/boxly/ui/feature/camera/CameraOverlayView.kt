@@ -43,7 +43,7 @@ fun CameraOverlay(viewModel: CameraViewModel) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.End,
             modifier = Modifier.fillMaxSize()
-                .padding(15.dp)
+                .padding(end = 15.dp, top = 20.dp)
         ) {
             if (uiState.isTimerChoiceVisible.value) {
                 TimerChoiceBox(viewModel)
